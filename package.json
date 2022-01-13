@@ -1,0 +1,113 @@
+{
+    "name": "reactium",
+    "displayName": "Reactium Platform",
+    "description": "Reactium Platform tools for Visual Studio Code",
+    "version": "0.0.1",
+    "engines": {
+        "vscode": "^1.63.0"
+    },
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [
+        "onCommand:reactium.component",
+        "onCommand:reactium.install",
+        "workspaceContains:**/reactium-config.js",
+        "workspaceContains:**/actinium-config.js"
+    ],
+    "main": "./src/extension.js",
+    "contributes": {
+        "commands": [
+            {
+                "command": "reactium.component",
+                "when": "explorerResourceIsFolder",
+                "title": "New Reactium Component"
+            },
+            {
+                "command": "reactium.hooks",
+                "when": "explorerResourceIsFolder",
+                "title": "New Reactium Hooks File"
+            },
+            {
+                "command": "reactium.install",
+                "when": "explorerResourceIsFolder",
+                "title": "Reactium Install/Update"
+            },
+            {
+                "command": "reactium.route",
+                "when": "explorerResourceIsFolder",
+                "title": "New Reactium Route File"
+            },
+            {
+                "command": "reactium.style",
+                "when": "explorerResourceIsFolder",
+                "title": "New Reactium Style File"
+            },
+            {
+                "command": "reactium.zone",
+                "when": "explorerResourceIsFolder",
+                "title": "New Reactium Zone File"
+            }
+        ],
+        "menus": {
+            "explorer/context": [
+                {
+                    "command": "reactium.component",
+                    "when": "explorerResourceIsFolder",
+                    "group": "1_navigation"
+                },
+                {
+                    "command": "reactium.hooks",
+                    "when": "explorerResourceIsFolder",
+                    "group": "2_navigation"
+                },
+                {
+                    "command": "reactium.route",
+                    "when": "explorerResourceIsFolder",
+                    "group": "2_navigation"
+                },
+                {
+                    "command": "reactium.style",
+                    "when": "explorerResourceIsFolder",
+                    "group": "2_navigation"
+                },
+                {
+                    "command": "reactium.zone",
+                    "when": "explorerResourceIsFolder",
+                    "group": "2_navigation"
+                },
+                {
+                    "command": "reactium.install",
+                    "when": "explorerResourceIsFolder && resourceFilename in workspace.folders",
+                    "group": "z_reactium"
+                }
+            ]
+        }
+    },
+    "scripts": {
+        "lint": "eslint .",
+        "pretest": "npm run lint",
+        "test": "node ./test/runTest.js"
+    },
+    "devDependencies": {
+        "@types/vscode": "^1.63.0",
+        "@types/glob": "^7.1.4",
+        "@types/mocha": "^9.0.0",
+        "@types/node": "14.x",
+        "eslint": "^8.1.0",
+        "glob": "^7.1.7",
+        "mocha": "^9.1.3",
+        "typescript": "^4.4.4",
+        "@vscode/test-electron": "^1.6.2"
+    },
+    "dependencies": {
+        "@atomic-reactor/cli": "^2.2.70",
+        "camelcase": "^6.3.0",
+        "fast-glob": "^3.2.10",
+        "fs-extra": "^10.0.0",
+        "handlebars": "^4.7.7",
+        "object-path": "^0.11.8",
+        "slugify": "^1.6.5",
+        "underscore": "^1.13.2"
+    }
+}
