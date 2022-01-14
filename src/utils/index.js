@@ -221,33 +221,42 @@ const styleTypeSelect = (
             label: 'default',
             file: '_reactium-style.scss',
             picked: true,
+            index: 0,
         },
         {
             label: 'mixins',
-            description: -1000,
             file: '_reactium-style-mixins.scss',
+            index: 1,
         },
         {
             label: 'variables',
-            description: -900,
             file: '_reactium-style-variables.scss',
+            index: 2,
         },
-        { label: 'base', description: -800, file: '_reactium-style-base.scss' },
-        { label: 'atoms', description: 0, file: '_reactium-style-atoms.scss' },
+        {
+            label: 'base',
+            file: '_reactium-style-base.scss',
+            index: 3,
+        },
+        {
+            label: 'atoms',
+            file: '_reactium-style-atoms.scss',
+            index: 4,
+        },
         {
             label: 'molecules',
-            description: 800,
             file: '_reactium-style-molecules.scss',
+            index: 5,
         },
         {
             label: 'organisms',
-            description: 900,
             file: '_reactium-style-organisms.scss',
+            index: 6,
         },
         {
             label: 'overrides',
-            description: 1000,
             file: '_reactium-style-overrides.scss',
+            index: 7,
         },
     ];
 

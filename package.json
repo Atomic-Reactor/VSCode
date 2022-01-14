@@ -4,7 +4,8 @@
     "displayName": "Reactium Platform",
     "description": "Reactium Platform tools for Visual Studio Code",
     "author": "Reactium LLC (https://reactium.io)",
-    "version": "0.0.1",
+    "icon": "./images/icon.png",
+    "version": "0.0.2",
     "engines": {
         "vscode": "^1.63.0"
     },
