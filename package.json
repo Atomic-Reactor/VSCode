@@ -1,5 +1,6 @@
 {
     "name": "reactium",
+    "publisher": "Reactium",
     "displayName": "Reactium Platform",
     "description": "Reactium Platform tools for Visual Studio Code",
     "author": "Reactium LLC (https://reactium.io)",
