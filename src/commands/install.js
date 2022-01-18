@@ -42,7 +42,7 @@ async function command(e) {
 
         progress.report({
             increment: 10,
-            message: 'installing dependencies...',
+            message: 'installing dependencies (this may take awhile)...',
         });
 
         await Utils.runCommand('npx', [

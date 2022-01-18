@@ -5,7 +5,7 @@
     "description": "Reactium Platform tools for Visual Studio Code",
     "author": "Reactium LLC (https://reactium.io)",
     "icon": "images/icon.png",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "engines": {
         "vscode": "^1.63.0"
     },
@@ -55,9 +55,9 @@
                 "title": "New Reactium Style File"
             },
             {
-                "command": "reactium.zone",
+                "command": "reactium.domain",
                 "when": "explorerResourceIsFolder",
-                "title": "New Reactium Zone File"
+                "title": "New Reactium Domain File"
             }
         ],
         "menus": {
@@ -83,7 +83,7 @@
                     "group": "2_navigation"
                 },
                 {
-                    "command": "reactium.zone",
+                    "command": "reactium.domain",
                     "when": "explorerResourceIsFolder",
                     "group": "2_navigation"
                 },

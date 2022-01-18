@@ -17,27 +17,27 @@ const componentFeatureSelect = async (options = {}) => {
             key: 'hooks',
             label: 'Reactium hooks:',
             picked: true,
-            description: 'Creates the reactium-hooks.js file',
+            description: 'Creates or replace reactium-hooks.js file',
         },
         {
             key: 'style',
             label: 'Stylesheet:',
             picked: true,
-            description: 'Creates the _reactium-style.scss file',
+            description: 'Creates or replace _reactium-style.scss file',
         },
         {
             key: 'route',
             label: 'Route:',
             picked: true,
             value: true,
-            description: 'Creates the route.js file',
+            description: 'Creates or replace the route.js file',
         },
         {
-            key: 'zone',
-            label: 'Zone:',
+            key: 'domain',
+            label: 'Domain:',
             picked: true,
             value: true,
-            description: 'Creates the domain.js file',
+            description: 'Creates or replace the domain.js file',
         },
     ];
 
@@ -90,7 +90,7 @@ const componentGen = async params => {
         domain: {
             file: 'domain.js',
             template: 'domain.hbs',
-            create: params.zone,
+            create: params.domain,
         },
         route: {
             file: 'route.js',
@@ -99,6 +99,7 @@ const componentGen = async params => {
         },
         style: {
             file: params.styleType || '_reactium-style.scss',
+            template: 'reactium-style.hbs',
             create: params.style,
         },
     };

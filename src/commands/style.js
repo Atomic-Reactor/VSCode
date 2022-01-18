@@ -1,7 +1,9 @@
 const path = require('path');
+const fs = require('fs-extra');
 const vscode = require('vscode');
 const op = require('object-path');
 const Utils = require('../utils');
+const slugify = require('slugify');
 
 async function command(e) {
     const dir = e ? op.get(e, 'path') : undefined;
@@ -15,10 +17,19 @@ async function command(e) {
         return;
     }
 
+    let name = path.basename(dir);
+
+    const domainFilePath = Utils.normalize(dir, 'domain.js'); 
+    if (fs.existsSync(domainFilePath)) {
+        const domain = require(domainFilePath);
+        name = domain.name;
+    }
+
     const params = {
         dir,
         index: false,
-        name: Utils.cc(path.basename(dir)),
+        className: slugify(String(name).toLowerCase()),
+        name: Utils.cc(name),
         style: true,
         workspace,
     };

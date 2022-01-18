@@ -20,7 +20,7 @@ async function command(e) {
         index: false,
         name: Utils.cc(path.basename(dir)),
         workspace,
-        zone: true,
+        domain: true,
     };
 
     return vscode.window.withProgress(Utils.progressOptions(false), async progress => {
