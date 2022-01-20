@@ -5,7 +5,7 @@
     "description": "Reactium Platform tools for Visual Studio Code",
     "author": "Reactium LLC (https://reactium.io)",
     "icon": "images/icon.png",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "engines": {
         "vscode": "^1.63.0"
     },
@@ -89,7 +89,7 @@
                 },
                 {
                     "command": "reactium.install",
-                    "when": "explorerResourceIsFolder && resourceFilename in workspace.folders",
+                    "when": "explorerResourceIsFolder",
                     "group": "z_reactium"
                 }
             ]
