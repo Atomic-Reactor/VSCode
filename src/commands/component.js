@@ -2,6 +2,7 @@ const vscode = require('vscode');
 const op = require('object-path');
 const Utils = require('../utils');
 const slugify = require('slugify');
+const path = require('path');
 
 async function command(e) {
     const dir = e ? op.get(e, 'path') : undefined;
@@ -10,6 +11,9 @@ async function command(e) {
     const workspace = Utils.getWorkspace(dir);
 
     const isReactium = Utils.isReactium(workspace);
+
+    const isReactiumNative = Utils.isReactiumNative(workspace);
+
     if (!isReactium) {
         vscode.window.showErrorMessage('Workspace is not a Reactium project');
         return;
@@ -34,10 +38,13 @@ async function command(e) {
 
             progress.report({ increment: 25 });
 
-            const features = await Utils.componentFeatureSelect({
-                title: 'Reactium Component: Features',
-                placeHolder: 'Select features',
-            });
+            const features = await Utils.componentFeatureSelect(
+                {
+                    title: 'Reactium Component: Features',
+                    placeHolder: 'Select features',
+                },
+                workspace,
+            );
 
             if (Array.isArray(features) && features.length < 1) {
                 progress.report({ increment: 100 });
@@ -50,28 +57,44 @@ async function command(e) {
                 progress.report({ increment: 50 });
             }
 
+            if (isReactiumNative) {
+                params.domain = true;
+            }
+
             if (params.route === true) {
                 params.route = await Utils.input({
                     title: 'Reactium Component: Route',
-                    placeHolder: '/route-1, /route-2, /route/with/:param',
+                    placeHolder: isReactiumNative
+                        ? 'home, signin, dashboard'
+                        : '/route-1, /route-2, /route/with/:param',
                     prompt: 'Relative url path',
                 });
 
-                if (typeof params.route === 'string') {
-                    params.route = JSON.stringify(
-                        Utils.inputToArray(params.route)
-                            .sort()
-                            .reverse(),
-                    )
-                        .replace(/\"/g, "'")
-                        .replace(/,/g, ', ');
+                if (isReactiumNative) {
+                    params.route = String(slugify(params.route)).toLowerCase();
+                } else {
+                    if (typeof params.route === 'string') {
+                        params.route = JSON.stringify(
+                            Utils.inputToArray(params.route)
+                                .sort()
+                                .reverse(),
+                        )
+                            .replace(/\"/g, "'")
+                            .replace(/,/g, ', ');
+                    }
                 }
             }
 
             if (params.style === true) {
-                const { file } = await Utils.styleTypeSelect();
-                params.styleType = file;
-                params.className = slugify(String(params.name).toLowerCase());
+                if (isReactiumNative) {
+                    params.styleType = 'react-native';
+                } else {
+                    const { file } = await Utils.styleTypeSelect();
+                    params.styleType = file;
+                    params.className = slugify(
+                        String(params.name).toLowerCase(),
+                    );
+                }
             }
 
             progress.report({ increment: 75 });

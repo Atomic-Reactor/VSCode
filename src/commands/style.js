@@ -11,15 +11,26 @@ async function command(e) {
 
     const workspace = Utils.getWorkspace(dir);
 
+    const isReactiumNative = Utils.isReactiumNative(workspace);
+
+    if (isReactiumNative) {
+        vscode.window.showErrorMessage(
+            'Unable to create stylesheet. Workspace is a Reactium Native project.',
+        );
+        return;
+    }
+
     const isReactium = Utils.isReactium(workspace);
     if (!isReactium) {
-        vscode.window.showErrorMessage('Workspace is not a Reactium project');
+        vscode.window.showErrorMessage(
+            'Unable to create stylesheet. Workspace is not a Reactium project',
+        );
         return;
     }
 
     let name = path.basename(dir);
 
-    const domainFilePath = Utils.normalize(dir, 'domain.js'); 
+    const domainFilePath = Utils.normalize(dir, 'domain.js');
     if (fs.existsSync(domainFilePath)) {
         const domain = require(domainFilePath);
         name = domain.name;

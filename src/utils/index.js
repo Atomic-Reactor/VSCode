@@ -11,35 +11,44 @@ const handlebars = require('handlebars').compile;
 const cc = str =>
     camelcase(str, { pascalCase: true, preserveConsecutiveUppercase: true });
 
-const componentFeatureSelect = async (options = {}) => {
+const componentFeatureSelect = async (options = {}, cwd) => {
+    const isReactiumNative = Utils.isReactiumNative(cwd);
+
     const choices = [
         {
             key: 'hooks',
-            label: 'Reactium hooks:',
+            label: 'Reactium Hooks:',
             picked: true,
-            description: 'Creates or replace reactium-hooks.js file',
+            description: 'Create or replace reactium-hooks.js file',
         },
         {
             key: 'style',
-            label: 'Stylesheet:',
+            label: isReactiumNative ? 'Styles:' : 'Stylesheet:',
             picked: true,
-            description: 'Creates or replace _reactium-style.scss file',
+            description: isReactiumNative
+                ? 'Include Reactium.Style registration block'
+                : 'Create or replace _reactium-style.scss file',
         },
         {
             key: 'route',
             label: 'Route:',
             picked: true,
             value: true,
-            description: 'Creates or replace the route.js file',
+            description: isReactiumNative
+                ? 'Include Reactium.Route registration block'
+                : 'Create or replace the route.js file',
         },
-        {
+    ];
+
+    if (!isReactiumNative) {
+        choices.push({
             key: 'domain',
             label: 'Domain:',
             picked: true,
             value: true,
-            description: 'Creates or replace the domain.js file',
-        },
-    ];
+            description: 'Create or replace the domain.js file',
+        });
+    }
 
     const selection = await vscode.window.showQuickPick(choices, {
         canPickMany: true,
@@ -50,7 +59,10 @@ const componentFeatureSelect = async (options = {}) => {
 };
 
 const componentGen = async params => {
+    console.log(params);
     const cwd = params.workspace;
+
+    const isReactiumNative = Utils.isReactiumNative(cwd);
 
     const templateDirSearch = glob.sync(['**/reactium-config.js'], {
         cwd,
@@ -103,6 +115,11 @@ const componentGen = async params => {
             create: params.style,
         },
     };
+
+    if (isReactiumNative) {
+        delete templates.route;
+        delete templates.style;
+    }
 
     // Create component directory:
     fs.ensureDirSync(params.dir);
@@ -177,6 +194,15 @@ const isFile = (...args) => fs.existsSync(normalize(...args));
 const isReactium = cwd =>
     Boolean(
         glob.sync(['**/reactium-config.js'], {
+            cwd,
+            dot: true,
+            onlyFiles: true,
+        }).length > 0,
+    );
+
+const isReactiumNative = cwd =>
+    Boolean(
+        glob.sync(['**/metro.config.js'], {
             cwd,
             dot: true,
             onlyFiles: true,
@@ -301,6 +327,7 @@ const Utils = {
     isActinium,
     isFile,
     isReactium,
+    isReactiumNative,
     normalize,
     progressOptions,
     runCommand,

@@ -9,6 +9,15 @@ async function command(e) {
 
     const workspace = Utils.getWorkspace(dir);
 
+    const isReactiumNative = Utils.isReactiumNative(workspace);
+
+    if (isReactiumNative) {
+        vscode.window.showErrorMessage(
+            'Unable to create route file. Workspace is a Reactium Native project.',
+        );
+        return;
+    }
+
     const isReactium = Utils.isReactium(workspace);
     if (!isReactium) {
         vscode.window.showErrorMessage('Workspace is not a Reactium project');
@@ -22,36 +31,39 @@ async function command(e) {
         workspace,
     };
 
-    return vscode.window.withProgress(Utils.progressOptions(false), async progress => {
-        params.route = await Utils.input({
-            title: 'Reactium Component: Route',
-            placeHolder: '/route-1, /route-2, /route/with/:param',
-            prompt: 'Relative url path',
-        });
+    return vscode.window.withProgress(
+        Utils.progressOptions(false),
+        async progress => {
+            params.route = await Utils.input({
+                title: 'Reactium Component: Route',
+                placeHolder: '/route-1, /route-2, /route/with/:param',
+                prompt: 'Relative url path',
+            });
 
-        if (typeof params.route === 'string') {
-            params.route = JSON.stringify(
-                Utils.inputToArray(params.route)
-                    .sort()
-                    .reverse(),
-            )
-                .replace(/\"/g, "'")
-                .replace(/,/g, ', ');
-        }
+            if (typeof params.route === 'string') {
+                params.route = JSON.stringify(
+                    Utils.inputToArray(params.route)
+                        .sort()
+                        .reverse(),
+                )
+                    .replace(/\"/g, "'")
+                    .replace(/,/g, ', ');
+            }
 
-        progress.report({ increment: 25 });
+            progress.report({ increment: 25 });
 
-        Utils.componentGen(params);
+            Utils.componentGen(params);
 
-        progress.report({ increment: 99 });
+            progress.report({ increment: 99 });
 
-        return new Promise(resolve => {
-            setTimeout(() => {
-                progress.report({ increment: 100 });
-                resolve();
-            }, 2000);
-        });
-    });
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    progress.report({ increment: 100 });
+                    resolve();
+                }, 2000);
+            });
+        },
+    );
 }
 
 module.exports = command;
