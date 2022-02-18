@@ -11,8 +11,8 @@ const handlebars = require('handlebars').compile;
 const cc = str =>
     camelcase(str, { pascalCase: true, preserveConsecutiveUppercase: true });
 
-const componentFeatureSelect = async (options = {}, cwd) => {
-    const isReactiumNative = Utils.isReactiumNative(cwd);
+const componentFeatureSelect = async (options = {}, params) => {
+    const { isReactiumNative } = params;
 
     const choices = [
         {
@@ -59,10 +59,9 @@ const componentFeatureSelect = async (options = {}, cwd) => {
 };
 
 const componentGen = async params => {
-    console.log(params);
     const cwd = params.workspace;
 
-    const isReactiumNative = Utils.isReactiumNative(cwd);
+    const { isReactiumNative } = params;
 
     const templateDirSearch = glob.sync(['**/reactium-config.js'], {
         cwd,
@@ -180,34 +179,76 @@ const inputToArray = str => {
     });
 };
 
-const isActinium = cwd =>
-    Boolean(
-        glob.sync(['**/actinium-config.js'], {
-            cwd,
-            dot: true,
-            onlyFiles: true,
-        }).length > 0,
-    );
+const isActinium = dir => {
+    let val = false;
+
+    const dirArr = dir.split(path.sep);
+    const wspArr = getWorkspace(dir).split(path.sep);
+
+    while (val === false) {
+        const filepath = normalize(...dirArr, '.core', 'actinium-config.js');
+        val = fs.existsSync(filepath);
+
+        dirArr.pop();
+
+        if (dirArr.length < wspArr.length) {
+            break;
+        }
+    }
+
+    console.log('file: index.js : isActinium :', val);
+
+    return val;
+};
 
 const isFile = (...args) => fs.existsSync(normalize(...args));
 
-const isReactium = cwd =>
-    Boolean(
-        glob.sync(['**/reactium-config.js'], {
-            cwd,
-            dot: true,
-            onlyFiles: true,
-        }).length > 0,
-    );
+const isReactium = dir => {
+    let val = false;
 
-const isReactiumNative = cwd =>
-    Boolean(
-        glob.sync(['**/metro.config.js'], {
-            cwd,
-            dot: true,
-            onlyFiles: true,
-        }).length > 0,
-    );
+    const dirArr = dir.split(path.sep);
+    const wspArr = getWorkspace(dir).split(path.sep);
+
+    while (val === false) {
+        const filepath = normalize(...dirArr, '.core', 'reactium-config.js');
+        const rnfilepath = normalize(...dirArr, '.core', 'metro.config.js');
+
+        val = fs.existsSync(filepath) && !fs.existsSync(rnfilepath);
+
+        dirArr.pop();
+
+        if (dirArr.length < wspArr.length) {
+            break;
+        }
+    }
+
+    console.log('file: index.js : isReactium :', dir, val);
+
+    return val;
+};
+
+const isReactiumNative = dir => {
+    let val = false;
+
+    const dirArr = dir.split(path.sep);
+    const wspArr = getWorkspace(dir).split(path.sep);
+
+    while (val === false) {
+        const filepath = normalize(...dirArr, '.core', 'metro.config.js');
+
+        val = fs.existsSync(filepath);
+
+        dirArr.pop();
+
+        if (dirArr.length < wspArr.length) {
+            break;
+        }
+    }
+
+    console.log('file: index.js : isReactiumNative :', dir, val);
+
+    return val;
+};
 
 const normalize = (...args) => path.normalize(path.join(...args));
 

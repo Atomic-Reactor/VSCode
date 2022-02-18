@@ -10,16 +10,22 @@ async function command(e) {
 
     const workspace = Utils.getWorkspace(dir);
 
-    const isReactium = Utils.isReactium(workspace);
+    const isReactium = Utils.isReactium(dir);
 
-    const isReactiumNative = Utils.isReactiumNative(workspace);
+    const isReactiumNative = Utils.isReactiumNative(dir);
 
-    if (!isReactium) {
+    if (!isReactium && !isReactiumNative) {
         vscode.window.showErrorMessage('Workspace is not a Reactium project');
         return;
     }
 
-    const params = { dir, index: true, workspace };
+    const params = {
+        index: true,
+        isReactium,
+        isReactiumNative,
+        parent: dir,
+        workspace,
+    };
 
     return vscode.window.withProgress(
         Utils.progressOptions(false),
@@ -34,7 +40,7 @@ async function command(e) {
                 params.name = path.basename(dir);
             }
 
-            params.dir = Utils.normalize(params.dir, Utils.cc(params.name));
+            params.dir = Utils.normalize(dir, Utils.cc(params.name));
 
             progress.report({ increment: 25 });
 
@@ -43,7 +49,7 @@ async function command(e) {
                     title: 'Reactium Component: Features',
                     placeHolder: 'Select features',
                 },
-                workspace,
+                params,
             );
 
             if (Array.isArray(features) && features.length < 1) {
